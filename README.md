@@ -117,7 +117,52 @@ Normalize our dataset.
 <H3>Program:</H3> 
 
 ```py
-
+import pandas as pd
+import sklearn
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+names = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'Class']
+irisdata = pd.read_csv(url, names=names)
+X = irisdata.iloc[:, 0:4]
+y = irisdata.select_dtypes(include=[object])
+X.head()
+y.head()
+y.Class.unique()
+le = preprocessing.LabelEncoder()
+y = y.apply(le.fit_transform)
+y.head()
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20)
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+mlp = MLPClassifier(hidden_layer_sizes=(10, 10, 10), max_iter=1000)
+mlp.fit(X_train, y_train.values.ravel())
+predictions = mlp.predict(X_test)
+print(predictions)
+print(confusion_matrix(y_test,predictions))
+print(classification_report(y_test,predictions))
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+arr = ['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth', 'Species']
+df = pd.read_csv(url, names=arr)
+print(df.head())
+a = df.iloc[:, 0:4]
+b = df.select_dtypes(include=[object])
+b = df.iloc[:,4:5]
+training_a, testing_a, training_b, testing_b = train_test_split(a, b, test_size = 0.25)
+myscaler = StandardScaler()
+myscaler.fit(training_a)
+training_a = myscaler.transform(training_a)
+testing_a = myscaler.transform(testing_a)
+m1 = MLPClassifier(hidden_layer_sizes=(12, 13, 14), activation='relu', solver='adam', max_iter=2500)
+m1.fit(training_a, training_b.values.ravel())
+predicted_values = m1.predict(testing_a)
+print(confusion_matrix(testing_b,predicted_values))
+print(classification_report(testing_b,predicted_values))
 ```
 
 <H3>Output:</H3>
@@ -128,11 +173,10 @@ Target Variable:<br>
 Label Encoded:<br>
 ![image](https://github.com/user-attachments/assets/5088740f-63ab-4c94-896e-0660470621cc)
 
-Confusion matrix and Classification Report:
+Confusion matrix and Classification Report:<br>
 ![image](https://github.com/user-attachments/assets/6fba40f6-f0de-4854-9df6-0eea75e58938)
 
 ![image](https://github.com/user-attachments/assets/8ea698d1-c043-413e-860d-2cb59bedc330)
-
 
 
 <H3>Result:</H3>
